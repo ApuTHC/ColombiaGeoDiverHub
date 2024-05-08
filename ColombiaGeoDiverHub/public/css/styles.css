@@ -17,12 +17,12 @@ body{
 
 /* ///////ASPECTO DEL ENCABEZADO DEFINIDO/////////// */
 header{
+  z-index: 9999;
   position: absolute;
-  overflow: visible;
   top: 1.5vh;
   left:1.5vh;
-  width: 70vh;
-  height: 6vh;
+  width: 72vh;
+  height: 10vh;
   margin: 0px;
   padding: 8px;
   background-color: #111;
@@ -30,47 +30,63 @@ header{
   font-weight: normal;
   color:white;
   border-radius: 3px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
-.menu-container  {
-  position: absolute;
-  overflow: visible;
-  float: left;  
-  padding: 1px 7px;
+.menu-container {
+  display: flex !important;
+  height: 100%;
+  width: 6vh;
+  display: inline-block;
 }
+
 
 .menu-container a {
-  position: absolute;
-  overflow: visible;
-  top: 0vh;
-  left:0vh;
-  float: left;
-  margin-top: 0;
-  padding: 1px 7px;
-  background-color: #111;
+  margin: auto;
   color: white;
   font-size: 26px;
+  cursor: pointer;
 }
 
 .menu-container a:hover {
-  background-color: #6e6b6b;
+  color: #6e6b6b;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-menu{
+  z-index: 1 !important;
+  display: inline;
+  top: 40px !important;
+  left: -800px !important;
+  background: #111;
+  opacity: 0;
+  transition: all 0.25s ease;
+}
+
+.dropdown-menu.show{
+  top: 10px !important;
+  left: -17px !important;
+  opacity: 1;
+}
+
+.title-box {
+  display: inline-block;
 }
 
 
 header h2 {
-  position: absolute;
-  overflow: visible;
-  float: top;
-  top: -2vh;
-  left: 8vh;
+  margin: 0px;
   font-size: 24px;
 }
 
 header h6 {
-  position: absolute;
-  overflow: visible;
-  top: 0.5vh;
-  left: 8vh;
   font-weight: normal;
   font-size: 13px;
   font-style: italic;
@@ -145,83 +161,22 @@ header h6 {
 }
 
 /*----- Aspecto del modal del menu diversidad----------*/
-/* The Modal (background) */
+
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  top: 0;
-  left: 0;
-  z-index: 3; /* Sit on top */
-  padding-top: 50px; /* Location of the box */
-  padding-left: 250px;
-  padding-bottom: 250px;
-  padding-right: 50px;
-  width: 90%; /* Variable width */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  height: 110%; /* Variable height */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  position: absolute;
-  overflow: auto;
-  color: black;
-  background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  border: 1px solid #888;
-  width: 60%;
-  height: 50%;
-  top: 12vh;
-  left: 60vh;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  -webkit-animation-name: animatetop;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatetop;
-  animation-duration: 0.4s
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-  from {top:-300px; opacity:0} 
-  to {top:0; opacity:1}
-}
-
-@keyframes animatetop {
-  from {top:-300px; opacity:0}
-  to {top:0; opacity:1}
-}
-
-/* The Close Button */
-.close {
-  color: white;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
+  z-index: 99999;
 }
 
 .modal-header {
-  font-size: 16px;
-  font-weight: normal;
-  padding: 2px 16px;
-  height: 60px;
-  background-color: #333;
+  background: #111;
   color: white;
 }
 
-.modal-body {
-  padding: 10px 16px;
-  font-weight: normal;
+.modal-header span{
+  color: white;
+}
 
+.modal-content{
+  margin-top: 15vh;
 }
 
 /* containers */

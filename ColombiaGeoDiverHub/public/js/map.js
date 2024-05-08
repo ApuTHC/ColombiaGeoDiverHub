@@ -1,32 +1,13 @@
-/* <-------------- ventana emergente bienvenida --------------> */
-
-
-
-/* <-------------- API key_Arcgis --------------> */
-
-/* <------------------- Menu geodiversidad -------------------> */
-
-/* Configura el ancho del menu desplegable a XXX px (show it) */
-function openNav() {
-  document.getElementById("sidepanelmenu").style.width = "350px";
-  document.getElementById("main").style.marginLeft = "350px";
-  document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-}
-/* configura el ancho del menu a 0 (hide it) */
-function closeNav() {
-  document.getElementById("sidepanelmenu").style.width = "0";
-  document.getElementById("main").style.marginLeft = "0";
-  document.body.style.backgroundColor = "#333333";
-}
-
-
-
+// Declaramos una variable global para el mapa
+var map;
+var markers = L.markerClusterGroup();
+var capaPuntos = L.layerGroup();
 
 // Función anónima autoejecutable para evitar conflictos con otras librerías
 (function() {
   
-// Declaramos una variable global para el mapa
-var map;
+
+var datos_modal = {}
 
 // Esperamos a que el documento esté listo
 $(document).ready(function () {
@@ -34,10 +15,9 @@ $(document).ready(function () {
   // Inicializamos el mapa en una posición y con un zoom determinados
   map = L.map('map').setView([5.5, -74], 5);
 
-
+  AddMenu();
 
   
-
   // Añadimos el mapa base de OpenStreetMap con relieve
   var osm = L.tileLayer('https://tile.osm.ch/switzerland/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -45,88 +25,73 @@ $(document).ready(function () {
   }).addTo(map);
 
 
-  // Añadimos el poligono de Colombia desde Arcgis.com
-  var limite_colombia = L.esri.featureLayer({url: "https://services1.arcgis.com/Qrk4Z5vQ94JXkdYM/arcgis/rest/services/colombia/FeatureServer/0"});
-  limite_colombia.addTo(map);
-
-
   // Añadimos el poligono de regiones naturales de Colombia desde Arcgis.com
   var reg_colombia = L.esri.featureLayer({
     url: "https://services6.arcgis.com/DDaVpjlpeb7RGXHg/arcgis/rest/services/Regiones_Naturales_de_Colombia/FeatureServer/0"
   });
-   reg_colombia.addTo(map);
+  reg_colombia.addTo(map);
 
-
-     // Añadimos el poligono de regiones naturales de Colombia desde Arcgis.com
-  var ligs_AV = L.esri.featureLayer({
-    url: "https://services1.arcgis.com/Qrk4Z5vQ94JXkdYM/arcgis/rest/services/ligs_av/FeatureServer/0"
+  var ligs;
+  markers.clearLayers();
+  capaPuntos.clearLayers();
+  database.ref().child("lig").get().then((snapshot) => {
+    if (snapshot.exists()) {
+        this.database = snapshot.val();
+        db = snapshot.val();
+        console.log(db);
+        for (let i = 0; i < db.length; i++) {
+            const element = db[i];
+            if (element.active){
+                auxLng = element['lng'];
+                auxLat = element['lat'];
+                var point = L.marker([auxLat, auxLng]).toGeoJSON();                
+                L.extend(point.properties, {
+                    id: i,
+                    Codigo: element['code'],
+                    Fecha: element['date'],
+                    Descripcion: element['info'],
+                    Norte: element['lat'],
+                    Este: element['lng'],
+                    Nombre: element['name'],
+                    Region: element['region'],
+                    Tipologia: element['type'],
+                    Responsable: element['user'],
+                    
+                });
+                L.geoJson(point,{
+                    onEachFeature: function(feature, layer) {
+                      if (feature.properties) {
+                        layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                        return k + ": " + feature.properties[k];
+                        }).join("<br />"), {
+                        maxHeight: 200
+                        });
+                      }
+                    }
+                }).addTo(markers);
+                
+            }
+            
+        }
+        markers.addTo(capaPuntos);
+        markers.addTo(map);
+        notification.success('¡Listo!', 'Se cargó con exito los eventos');
+        console.log(capaPuntos.toGeoJSON());
+    } else {
+        console.log("No data available");
+        notification.alert('¡Error!', 'Ocurrió un error al intentar cargar los eventos de la base de datos, no hay datos');
+    }
+  }).catch((error) => {
+      notification.alert('¡Error!', 'Ocurrió un error al intentar cargar los eventos');
+      console.log(error);
   });
-  ligs_AV.addTo(map);
 
-
-  
 
   // Datos propios para cada region
-
-  // Creamos un geojson que representa un punto para cada region
-  var geojson_pacifico = 
-  { 
-    "type": "Point", 
-    "coordinates": [-77.404518,6.226262]
-  } 
-  // Creamos una capa a partir del geojson anterior y la añadimos al mapa
-  var pacifico = L.geoJSON(geojson_pacifico).addTo(map).bindPopup("<b>Pacífico</b>");
-
-
-  var geojson_caribe = 
-  { 
-    "type": "Point", 
-    "coordinates": [-73.05902,10.836154]
-  } 
-  // Creamos una capa a partir del geojson anterior y la añadimos al mapa
-  var caribe = L.geoJSON(geojson_caribe).addTo(map).bindPopup("<b>Caribe</b>");
-
-  
-  var geojson_andina = 
-  { 
-    "type": "Point", 
-    "coordinates": [-76.999741,1.145637]
-  } 
-  // Creamos una capa a partir del geojson anterior y la añadimos al mapa
-  var andina = L.geoJSON(geojson_andina).addTo(map).bindPopup("<b>Andina</b>");
-
-
-  // Creamos un geojson que representa un punto para cada region
-  var geojson_orinoco = 
-  { 
-    "type": "Point", 
-    "coordinates": [-67.570038,6.203475]
-  } 
-  // Creamos una capa a partir del geojson anterior y la añadimos al mapa
-  var orinoco = L.geoJSON(geojson_orinoco).addTo(map).bindPopup("<b>Orinoco</b>");
-
-
-  // Creamos un geojson que representa un punto para cada region
-  var geojson_amazonas = 
-  { 
-    "type": "Point", 
-    "coordinates": [-70.048828,-4.101083]
-  } 
-  // Creamos una capa a partir del geojson anterior y la añadimos al mapa
-  var amazonas = L.geoJSON(geojson_amazonas).addTo(map).bindPopup("<b>Amazonas</b>");
 
 
   // Creamos un mapa base satelital de ESRI
   var imagery = L.esri.basemapLayer('Imagery');
-
-  // Funcion que arroja coordenadas cuando se da click
-  var popup = L.popup();
-
-    function onMapClick(e) {
-        popup.setLatLng(e.latlng).setContent("Este sitio tiene las siquientes coordenadas: " + e.latlng.toString()).openOn(map);
-    }
-
-    map.on('click', onMapClick);
 
   /* <------------------- Barra Lateral -------------------> */
 
@@ -143,14 +108,7 @@ $(document).ready(function () {
 
   // Creamos un objeto con las capas y sus nombres que queremos que aparezcan en el control de capas
   const overlays = [
-    {name: 'Limite Colombia', layer: limite_colombia},
     {name: 'Regiones Colombia', layer: reg_colombia},
-    {name: 'Andina', layer: andina},
-    {name: 'Caribe', layer: caribe},
-    {name: 'Pacífica', layer: pacifico},
-    {name: 'Orinoco', layer: orinoco},
-    {name: 'Amazonas', layer: amazonas},
-
   ];
   // Creamos el control de capas y lo añadimos al mapa
   const legend = L.multiControl(overlays, {position:'topright', label: 'Control de capas'}).addTo(map);
@@ -227,50 +185,34 @@ L.control.scale({position: "bottomleft", maxWidth: 100, metric: true, imperial: 
 /* <------------------- Control de botones de zoom -------------------> */
 map.zoomControl.setPosition('bottomleft');
 
-
-
-
   /* <------------- Control de Herramienta de Dibujo ------------> */
 
   // Creamos el control de dibujo y lo añadimos al mapa
   map.pm.addControls({
     position: 'bottomleft',
     drawMarker: true,
-    drawPolyline: true,
-    drawPolygon: true,
+    drawPolyline: false,
+    drawPolygon: false,
     
     drawRectangle: false,
     drawCircle: false,
     drawCircleMarker: false,
     drawText: false,
 
-    editMode: true,
+    editMode: false,
     dragMode:true,
     cutPolygon:false,
-    removalMode: true,
+    removalMode: false,
     rotateMode: false
   });
 
-  // Declaramos una variable de contador de capas creadas
-  var contador = 1;
-
-  // Creamos una función que se ejecutará cada vez que se cree una nueva capa
-  map.on('pm:create', function (e) {
-      // Obtenemos la capa creada y su GeoJSON
-      const layer = e.layer;
-      const geojson = layer.toGeoJSON();
-      console.log(geojson);
-      // Creamos un nombre para la capa e incrementamos el contador de capas creadas
-      const nombre = layer.pm._shape + " " + contador;
-      contador++;
-      // Añadimos la capa creada al control de capas
-      legend.addOverlay({name: nombre, layer: layer});
-
-      // Ejecutamos el editor de LIGs
-
-
-
-  });
+  notification = L.control.notifications({
+    timeout: 4000,
+    position: 'topright',
+    closable: true,
+    dismissable: true,
+    className: 'pastel'
+}).addTo(map);
 
 
   /* <----------- Control de Herramienta de Busqueda ----------> */
@@ -286,55 +228,295 @@ map.zoomControl.setPosition('bottomleft');
   // Añadimos un ícono de búsqueda al control de búsqueda
   $(".content .header").prepend('<i class="fa-solid fa-magnifying-glass-location"></i>');
   // Removemos el botón de cerrar del control de búsqueda
-  $(".content .header .close").remove();
-
-
-  /* <----------- Control de datos y capas cargadas----------> */
-
-        // Get the modals
-        var modals = document.getElementsByClassName('modal');
-        // Get the button that opens the modal
-          var btns = document.getElementsByClassName("openmodal");
-        // Get the <span> element that closes the modal
-          var spans=document.getElementsByClassName("close");
-
-        // When the user clicks the button, open the modal 
-          for(let i=0;i<btns.length;i++){
-            btns[i].onclick = function() {
-              modals[i].style.display = "block";
-             }
-          }
-        // When the user clicks on <span> (x), close the modal
-          for(let i=0;i<spans.length;i++){
-           spans[i].onclick = function() {
-             modals[i].style.display = "none";
-             }
-          }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-         if (event.target == modal) {
-            modal.style.display = "none";
-             }
-          }        
+  $(".content .header .close").remove();    
           
+  $('#dataModal').on('show.bs.modal', function (e) {
+    console.log($(e.relatedTarget).data('whatever'));
+    $(".modal-title").html(datos_modal[$(e.relatedTarget).data('whatever')]["title"]);
+    $(".modal-body").html(datos_modal[$(e.relatedTarget).data('whatever')]["html_content"]);
+  })
 
+  $('#files').change(function(evt) {
+    var files = evt.target.files; 
+    for (var i = 0, f; f = files[i]; i++) {
+        if (f.name.slice(-3) === 'zip') {
+            GraficarFileSHP(f);
+        }else if (f.name.slice(-3) === 'kml') {
+            GraficarFileKML(f);
+        }else if (f.name.slice(-3) === 'kmz') {
+            GraficarFileKMZ(f);
+        }else if (f.name.slice(-4) === 'json') {
+            GraficarFileGeoJSON(f);
+        }else{
+            notification.alert('Atención', 'Tipo de archivo incorrecto');
+        }
+      }
+});
+// Función que asigna el nombre del archivo al texto del input
+$("#files").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
   
 });
+
+function AddMenu() {
+  for (let i = 0; i < datos["data_modal"].length; i++) {
+    const element = datos["data_modal"][i];
+    datos_modal[element["id"]] = element;    
+
+    $("#menu-content").append(`<a class="dropdown-item" data-toggle="modal" data-target="#dataModal" data-whatever="${element["id"]}">${element["title"]}</a>`);
+
+  }
+}
+
+// crearDB();
+function crearDB() {
+  var bd = {"lig": []};
+  for (let i = 0; i < aburra["features"].length; i++) {
+    const element = aburra["features"][i];
+    let object = {}
+
+    object["name"] = element["properties"]["Name"] ? element["properties"]["Name"] : "Sin nombre";
+    object["region"] = "";
+    object["code"] = element["properties"]["Nomenclatu"];
+    object["date"] = "2024-03-03";
+    object["lat"] = element["geometry"]["coordinates"][1];
+    object["lng"] = element["geometry"]["coordinates"][0];
+    object["type"] = "";
+    object["info"] = "";
+    object["user"] = "";
+    object["active"] = true;
+
+    bd["lig"].push(object);
+  }
+  for (let i = 0; i < nuqui["features"].length; i++) {
+    const element = nuqui["features"][i];
+    let object = {}
+
+    object["name"] = element["properties"]["Nombre"] ? element["properties"]["Nombre"] : "Sin nombre";
+    object["region"] = element["properties"]["Región"] ? element["properties"]["Región"] : "";
+    object["code"] = "NU" + i;
+    object["date"] = "2024-03-03";
+    object["lat"] = element["geometry"]["coordinates"][1];
+    object["lng"] = element["geometry"]["coordinates"][0];
+    object["type"] = "";
+    object["info"] = "";
+    object["user"] = "";
+    object["active"] = true;
+
+    bd["lig"].push(object);
+  }
+  for (let i = 0; i < sanrafael["features"].length; i++) {
+    const element = sanrafael["features"][i];
+    let object = {}
+
+    object["name"] = element["properties"]["Name"] ? element["properties"]["Name"] : "Sin nombre";
+    object["region"] = "";
+    object["code"] = "SR" + i;
+    object["date"] = "2024-03-03";
+    object["lat"] = element["geometry"]["coordinates"][1];
+    object["lng"] = element["geometry"]["coordinates"][0];
+    object["type"] = "";
+    object["info"] = "";
+    object["user"] = "";
+    object["active"] = true;
+
+    bd["lig"].push(object);
+  }
+  for (let i = 0; i < snsm["features"].length; i++) {
+    const element = snsm["features"][i];
+    let object = {}
+
+    object["name"] = element["properties"]["Name"] ? element["properties"]["Name"] : "Sin nombre";
+    object["region"] = "";
+    object["code"] = "SNSM" + i;
+    object["date"] = "2024-03-03";
+    object["lat"] = element["geometry"]["coordinates"][1];
+    object["lng"] = element["geometry"]["coordinates"][0];
+    object["type"] = "";
+    object["info"] = "";
+    object["user"] = "";
+    object["active"] = true;
+
+    bd["lig"].push(object);
+  }
+
+  console.log(bd);
+}
+
+//Cargar Capas ----->
+
+// Función que controla el input donde se suben los archivos
+
+// Función que añade el cudro de la capa a la sección de la Barra Lateral para capas tipo KML, KMZ, GeoJSON y SHP
+function AgregarContenidoFile(f) {
+    $("#content-input-cargarCapa").append(
+        '<div class="content-file">'+
+            '<div class="locate-cargarCapa" id="locate-cargarCapa_' + featuresCount + '"  onClick="EnfocarCapa(id)"><i class="fa-solid fa-crosshairs"></i></div>'+
+            '<label class="switch">'+
+                '<input type="checkbox" checked id="file_' + featuresCount + '" onChange="toggleDatosFiles(id)">'+
+                '<span class="slider round"></span>'+
+            '</label>'+
+            '<a>'+ f.name +'</a>'+
+            '<div class="d-block"></div>'+
+            '<div class="slidecontainer">'+
+                '<input type="range" min="0" max="100" value="0" class="sliderb" id="transp_file_'+featuresCount+'">'+
+                '<p>Transparencia: <span id="valTransp_file_'+featuresCount+'"></span>%</p>'+
+            '</div>'+
+        '</div>'
+    );
+    var slider = $("#transp_file_"+featuresCount)[0];
+    var output = $("#valTransp_file_"+featuresCount)[0];
+    output.innerHTML = slider.value;
+    slider.oninput = function () {
+      var id = parseInt($(this).attr('id').split('_')[2]);
+      var output = $("#valTransp_file_"+id)[0];
+      output.innerHTML = this.value;
+      var transpa = (100 - parseInt(this.value)) / 100;
+      if ($('#file_' + id).prop('checked')) {
+        featureFiles[id].setStyle({opacity : transpa});
+      }
+    }
+    featuresCount++;
+}
+
+// Funciones para cargar la información al visor
+// Cargar KML
+function GraficarFileKML(f) {
+    var reader = new FileReader();
+    reader.onload = (function (theFile) {
+      return function (e) {
+        fetch(e.target.result)
+          .then(res => res.text())
+          .then(kmltext => {
+            const parser = new DOMParser();
+            const kml = parser.parseFromString(kmltext, 'text/xml');
+            const track = new L.KML(kml,{pane: "layersPane"});
+            track.setStyle({opacity : 1});   
+            track.addTo(map); 
+            try {
+                map.fitBounds(track.getBounds());
+            } catch (error) {
+                console.log(error);
+            }
+            featureFiles.push(track);
+            AgregarContenidoFile(f);
+          });
+      };
+    })(f);
+    reader.readAsDataURL(f); 
+}
+// Cargar KMZ
+function GraficarFileKMZ(f) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var result = reader.result;
+        var kmz = L.kmzLayer().addTo(map);
+        kmz.parse(result, { name: f.name, icons: {} ,pane: "layersPane"});
+        featureFiles.push(kmz);        
+        try {
+            setTimeout(() => { map.fitBounds(kmz.getBounds()); AgregarContenidoFile(f);}, 200);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    reader.readAsArrayBuffer(f); 
+}
+// Cargar GeoJSON
+function GraficarFileGeoJSON(f) {
+  
+    var reader = new FileReader();
+    reader.onload = (function (theFile) {
+      return function (e) {
+
+        var obj = JSON.parse(e.target.result);
+        
+        var geoJSON = new L.geoJson(obj, {
+          onEachFeature: function(feature, layer) {
+            if (feature.properties) {
+              layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                return k + ": " + feature.properties[k];
+              }).join("<br />"), {
+                maxHeight: 200
+              });
+            }
+          },
+          pane: "layersPane",
+        });
+        geoJSON.setStyle({opacity : 1});  
+        geoJSON.addTo(map);  
+        map.fitBounds(geoJSON.getBounds());
+        featureFiles.push(geoJSON);
+        AgregarContenidoFile(f);
+      };
+    })(f);
+    reader.readAsText(f);
+  
+}
+// Cargar SHP comprimidos en .zip
+function GraficarFileSHP(f) {
+    var reader = new FileReader();
+    reader.onload = (function (theFile) {
+      return function (e) {
+  
+        var shpfile = new L.Shapefile(e.target.result, {
+          onEachFeature: function(feature, layer) {
+            if (feature.properties) {
+              layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                return k + ": " + feature.properties[k];
+              }).join("<br />"), {
+                maxHeight: 200
+              });
+            }
+          },
+          pane: "layersPane",
+        });
+        shpfile.setStyle({opacity : 1});  
+        shpfile.addTo(map);  
+        try {
+            setTimeout(() => { map.fitBounds(shpfile.getBounds());}, 200);
+        } catch (error) {
+            console.log(error);
+        }
+        featureFiles.push(shpfile);
+        AgregarContenidoFile(f);
+        shpfile.once("data:loaded", function() {
+          console.log("finished loaded shapefile");
+          console.log(shpfile.toGeoJSON());
+        });   
+  
+      };
+    })(f);
+    reader.readAsArrayBuffer(f);
+}
+
+
+
 })();
 
+// Variables para gestión de Carga de Capas
+var featureFiles = [];
+var featuresCount = 0;
+
+// Función que centra la capa seleccionada en el mapa
+function EnfocarCapa(id){
+  var num = id.split("_")[1];
+  try {
+      map.fitBounds(featureFiles[num].getBounds());
+  } catch (error) {
+      console.log(error);
+  }
+}
+// Función que muestra/oculta las capas en el mapa
+function toggleDatosFiles(id){
+  var num = id.split("_")[1];
+  if ($('#'+id).prop('checked')){
+      featureFiles[num].addTo(map);
+  } else{
+      map.removeLayer(featureFiles[num]);
+  }
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+//<----- Fin Cargar Capas

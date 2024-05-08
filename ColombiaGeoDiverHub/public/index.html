@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 
- <!-- Metadatos del archivo HTML-->
- <meta charset="utf-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta name="description" content="Escuela de Ciencias Aplicadas e Ingeniería de la Universidad EAFIT. Portal de Geodiversidad del Valle de Aburrá">
- <meta name="keywords" content="Geodiversidad, Geoconservación, Georutas, Patrimonio Geológico, Recursos Naturales">
- <meta name="author" content="Santiago Noriega Londoño y Maria Isabel Marín Cerón">
+<!-- Metadatos del archivo HTML-->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+  content="Escuela de Ciencias Aplicadas e Ingeniería de la Universidad EAFIT. Portal de Geodiversidad del Valle de Aburrá">
+<meta name="keywords" content="Geodiversidad, Geoconservación, Georutas, Patrimonio Geológico, Recursos Naturales">
+<meta name="author" content="Santiago Noriega Londoño y Maria Isabel Marín Cerón">
 
 
 <head>
-
   <!-- Enlace a las fuentes de google fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300;600;900&display=swap" rel="stylesheet">
 
+  <!-- Librería FontAwasome para el uso fácil de iconos en la página -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <!-- Librerías de Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
-  
-  <!-- Librería para usar recursos ESRI -->
-  <script src="js/esri-leaflet.js"></script>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.28/"></script>
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <!-- Librería para usar recursos ESRI-Leaflet -->
   <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-vector@4.2.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
 
-  
-
   <!-- Enlace al archivo JavaScript de jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Librería bootstrap para el uso de componentes de la página -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
 
   <!-- Librería para el control de barra lateral -->
   <link rel="stylesheet" href="css/leaflet-sidebar.css">
@@ -51,7 +52,7 @@
   <script src="js/L.switchBasemap.js"></script>
 
   <!-- Librerías para la herramienta de dibujo -->
-  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
   <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
 
   <!-- Librerías para la barra de busqueda -->
@@ -61,261 +62,94 @@
 
   <!-- Librerías para el minimapa -->
   <link rel="stylesheet" href="css/Control.MiniMap.css" />
-	<script src="js/Control.MiniMap.js" type="text/javascript"></script>
-
-  <!-- Librería FontAwasome para el uso fácil de iconos en la página -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="js/Control.MiniMap.js" type="text/javascript"></script>
 
   <!-- Notificaciones -->
   <script src="js/leaflet-notifications.js"></script>
   <link rel="stylesheet" href="css/leaflet-notifications.css">
 
   <!-- Firebase -->
-	<script src="js/firebase-app-compat.js"></script>
+  <script src="js/firebase-app-compat.js"></script>
   <script src="js/firebase-database-compat.js"></script>
+  <script src="js/firebase-auth-compat.js"></script>
+  <script src="js/firebase-ui-auth.js"></script>
+
+  <!-- Plugins pára visualización de información tipo KML -->
+  <script src="js/leaflet-kml.js"></script>
+  <!-- Plugins pára visualización de información tipo KMZ -->
+  <script src="js/leaflet-kmz.js"></script>
+  <script src="js/jszip.min.js"></script>
+  <script src="js/togeojson.js"></script>
+  <!-- Plugins pára visualización de información tipo SHP -->
+  <script src="js/shp.js"></script>
+  <script src="js/leaflet.shpfile.js"></script>
+  <!-- FileSaver -->
+  <script src="js/circuler.js"></script>
+  <script src="js/FileSaver.min.js"></script>
+  <!-- Download Shapefile from GeoJSON -->
+  <script src="js/shpwrite.js"></script>
+
+  
+  <link rel="stylesheet" href="css/MarkerCluster.css">
+  <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+  <script src="js/leaflet.markercluster.js"></script>
 
   <!-- Archivos Propios -->
+  <script src="data/data.js"></script>
+  <script src="data/aburra.js"></script>
+  <script src="data/nuqui.js"></script>
+  <script src="data/sanrafael.js"></script>
+  <script src="data/snsm.js"></script>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/server.js"></script>
   <script src="js/map.js"></script>
-
-  <!-- Datos -->
-  <script src="data/Municipios.js"></script>
-  <script src="data/ligs.js"></script>
-  <script src="data/Regiones.js"></script>
-  <script src="data/Colombia.js"></script>
   
+
 
   <title>ColombiaGeoDiverHub</title>
 </head>
 
 
 <body>
-  <!-- Mensaje de bienvenida -->
-
-
-  
   <!-- Encabezado -->
   <header>
     <!-- Menu principal del portal-->
     <!--CONTENEDOR CON ELEMENTOS DE LA BARRA DE NAVEGACION SUPERIOR-->
-    <div class="menu-container">
-        <a href="#menu" title="Menú" onclick="openNav()"><i class="fas fa-bars"></i></a>           
-    </div>     
+    <div class="menu-container dropdown">
+      <a class="dropdown-toggle" href="#" role="button" id="menuGeoDiv" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-bars"></i></a>
+      <div class="dropdown-menu" aria-labelledby="menuGeoDiv" id="menu-content">
+      </div>
+    </div>
     <div class="title-box">
-      <p><h2>ColombiaGeoDiverHub<br><h6><i>Un Enfoque Integrado para la 
-        Gestión de la Diversidad Bio-Geo-Cultural del Paisaje</i></h6></h2>
-      </p>
-  </div>
+        <h2>ColombiaGeoDiverHub<br>
+          <h6><i>Un Enfoque Integrado para la
+              Gestión de la Diversidad Bio-Geo-Cultural del Paisaje</i></h6>
+        </h2>
+    </div>
   </header>
 
-    <!--///////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-    <!--Aqui van a aparecer los elementos del mapa visor, con barras de herramientas, menus, fotos, etc-->
-    
-    
-    <!--Despliega el menu colapsible de Geodiversidad en la izquierda-->
-        <div id="sidepanelmenu" class="sidepanel">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-          <a id="intro" href="#intro"><button class="openmodal myBtn">Introducción</button></a><br>
-          <a id="que" href="#que"><button class="openmodal myBtn">¿Qué es Geodiversidad?</button></a><br>
-          <a id="geobio" href="#geobio"><button class="openmodal myBtn">Geodiversidad y Biodiversidad</button></a><br>
-          <a id="metodos" href="#metodos"><button class="openmodal myBtn">Métodos de valoración de la Geodiversidad</button></a><br>
-          <a id="objetivo" href="#objetivo"><button class="openmodal myBtn">Objetivo del Portal</button></a><br>
-       </div>
-
-    <!-- Despliegue del menu lateral izquierdo --> 
-     <!-- Inicio del Modal - Introduccion -->
-     <!-- The Modal Intro-->
-     <div class="modal myModal">
-      <!-- Modal content -->
+  <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
-         <div class="modal-header">
-         <span class="close">&times;</span>
-         <h2>Introducción</h2>
-         </div>
-         <div class="modal-body">
-            <div class="container">
-             <p class="text-justify">
-              Este es tu lugar de referencia para explorar la 
-              increíble variedad que conforma los paisajes de Colombia. 
-              No se trata solo de mapas y datos; es una ventana al 
-              corazón de la hermosa diversidad de Colombia, desde 
-              impresionantes montañas hasta exuberantes selvas 
-              tropicales. Imagínalo como un recorrido digital donde 
-              puedes descubrir cómo la tierra, las diferentes especies 
-              y la rica herencia cultural se fusionan para crear la 
-              experiencia única colombiana. <br> <br> <b>ColombiaGeoHub</b> no se trata 
-              solo de números y gráficos; es un emocionante viaje a través 
-              de las maravillas naturales y la riqueza cultural que define 
-              a Colombia. Únete a nosotros mientras exploramos un sistema que 
-              nos ayuda a comprender mejor cómo el entorno, las diversas plantas 
-              y animales, y las vibrantes culturas se conectan en este asombroso 
-              país, con miras a proponer soluciones basadas en el concepto de 
-              Diplomacia científica pragmática con actores no convencionales 
-              (p.e. campesinos, comunidades afro-descendientes, indigenas, con 
-              enfoque diferencial de género y grupos focales).</p><h3><br> <br>
-                <center><img src="img/earth.png" class="logo" alt="Logo" width="70px"> </center>
-                
-            </div>
-         </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
       </div>
     </div>
-
-     <!-- Inicio del Modal - Que es Geodiversidad? -->
-     <!-- The Modal Que es?-->
-     <div class="modal myModal">
-       <!-- Modal content -->
-       <div class="modal-content">
-          <div class="modal-header">
-          <span class="close">&times;</span>
-          <h2>¿Qué es Geodiversidad?</h2>
-          </div>
-          <div class="modal-body">
-             <div class="container">
-              <p>La Geodiversidad es la diversidad de elementos naturales, 
-              tales como minerales, rocas, fósiles, formas del relieve y 
-              sus paisajes, suelos, y procesos geológicos activos. La Geodiversidad constituye la 
-              base para la valoración del Patrimonio Geológico y la ejecución de planes de Geoconservación.</p>
-
-                <div class="img-box">
-                  <center><img src="img/Tukiainen.png" class="logo" alt="Logo" width="300px">
-                  <h6 color="grey"><p><i>Fuente: Tukiainen, Helena & Toivanen, Maija & Maliniemi, Tuija. (2022). 
-                    Geodiversity and Biodiversity. Geological Society, London, Special Publications. 
-                    530.</i></p></h6></center>
-                </div>
-              <p>En Geodiversidad es clave el concepto de <b><i>Lugares de Interes Geológico
-              o LIGs</i></b>. Un LIG corresponde a un punto donde existen elementos del paisaje
-              que poseen un valor científico, turístico y/o didáctico. Estos puntos 
-              sobresalen por una o varias de estas cualidades, y en conjunto, los LIGs pueden
-              ser usados para establecer directrices de planeamiento territorial, donde se 
-              incluyen las estrategias de conservación y adaptación al cambio climático,
-              programas de turismo sostenible y/o geoeducación, todos estos enfocados al
-              manejo sostenible del medio natural mediante los procesos de apropiación social
-              del conocimiento.
-              </p><br><br>
-              <center><img src="img/earth.png" class="logo" alt="Logo" width="70px"> </center>            
-             </div>
-          </div>
-       </div>
-     </div>
-
-     <!-- The Modal Geo y Bio-->
-     <div class="modal myModal">
-      <!-- Modal content -->
-      <div class="modal-content">
-         <div class="modal-header">
-         <span class="close">&times;</span>
-         <h2>Geodiversidad y Biodiversidad</h2>
-         </div>
-         <div class="modal-body">
-            <div class="container">
-             <p>La Geodiversidad es el elemento fisico que soporta la biodiversidad.</p>
-
-  
-             <center><iframe width="900" height="500" 
-             src="https://www.youtube.com/embed/4gL3XxN8Oew?si=XLYxoQLSnn6-4sC9" 
-             title="YouTube video player" frameborder="0" allow="accelerometer; 
-             autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
-             web-share" allowfullscreen></iframe></center>
-
-             <p>Es necesario entonces reconocer el valor de la Geodiversidad como elemento 
-              clave para la biodiversidad...
-             </p><br><br>
-             <center><img src="img/earth.png" class="logo" alt="Logo" width="70px"> </center>            
-            </div>
-         </div>
-      </div>
-    </div>
-
-
-
-     <!-- Inicio del Modal - Metodos de valoración -->
-     <!-- The Modal -->
-     <div class="modal myModal">
-        <!-- Modal content -->
-        <div class="modal-content">
-          <div class="modal-header">
-          <span class="close">&times;</span>
-          <h2>Métodos de valoración de la Geodiversidad</h2>
-          </div>
-          <div class="modal-body">
-             <div class="container">
-             <p>En términos generales, la estimación de la geodiversidad 
-              se basa en la cantidad de elementos abióticos que posee un determinado 
-              paisaje. Según Valentín (2021), un índice de geodiversidad se puede
-              estimar mediante el cálculo del número de elementos abióticos por 
-              unidad de área, permitiendo cuantificar un valor de densidad relativa. <br>
-              <div>
-                <center>
-                 <img src="img/geodiversidad.png" class="logo" alt="Logo" width="600px">
-                 <h6 color="grey"><p><i>Fuente: Elaboración propia</i></p></h6>
-                </center>
-                </div>
-              Esta aproximación se basa en parámetros como la geología (litología o 
-              distribución de las masas rocosas), la geomorfología (formas y procesos 
-              de los paisajes), la hidrología (distribución y dinámica del ciclo hídrico),
-              la pedología (origen y evolución de los suelos), la geología estructural (
-              deformación de la corteza terrestre), la palentología (evidencias de vida 
-              del pasado), y los recursos minerales (áreas de acumulación de metales, minerales 
-              industriales, etc.).<br><br>
-              Sin embargo esta aproximación no tiene en cuenta el efecto de la topografía, por lo
-              que es recomendable integrar el mapa de diversidad morfométrica (modidicado de 
-              Argyrous, 2016), en la cual se incluyen elementos como la amplitud del relieve,
-              la densidad de drenajes, el relieve relativo, entre otras.<br><br>
-              Estas dos metodologías fueron integradas mediante mapas de álgebra en sistemas de 
-              información geográfica para obtener un mapa de geodiversidad mas robusto e incluyente.
-             </p><br><br>
-             <center><img src="img/earth.png" class="logo" alt="Logo" width="70px"> </center>
-              </div>
-            </div>
-          </div>
-        </div>
-     </div>
-
-     <!-- Inicio del Modal - Objetivo del portal -->
-     <!-- The Modal -->
-     <div class="modal myModal">
-        <!-- Modal content -->
-        <div class="modal-content">
-          <div class="modal-header">
-          <span class="close">&times;</span>
-          <h2>Objetivo del Portal de Geodiversidad del Valle de Aburrá</h2>
-          </div>
-          <div class="modal-body">
-             <div class="container">
-             <p>Nuestro objetivo consiste en llevar al público en general
-              el conocimiento del medio natural que se produce localmente, 
-              asi como la identificación y categorización conjunta de LIGs 
-              de la mano de la comunidad en general como una estrategia de 
-              geoeducación y apropiación social del conocimiento. 
-
-              Adicionalmente, el portal busca convertirse en, no solo una 
-              herramienta de consulta generalizada, sino tambien convertirse 
-              en una herramienta de apoyo para la toma de desiciones en gestión ambiental y territorial.
-            </p><br>
-            <center><img src="img/earth.png" class="logo" alt="Logo" width="70px"> </center>
-            </div>
-          </div>
-        </div>
-     </div>
-           
-
-     </div>  
-
-
-
-
+  </div>
 
   <!-- Mapa -->
   <main>
-    <div id="map">
-      
-
-  <!-- Barra Lateral -->
-  <div id="sidebar" class="leaflet-sidebar collapsed">
-    <!-- Pestañas de navegación -->
-    <div class="leaflet-sidebar-tabs">
+    <div id="map"></div>
+    <!-- Barra Lateral -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+      <!-- Pestañas de navegación -->
+      <div class="leaflet-sidebar-tabs">
         <!-- Pestañas dispuestas en la parte superior -->
         <ul role="tablist">
           <!-- Registrar Lugar de Interes Geologico (LIG) -->
@@ -327,75 +161,80 @@
           <!-- Buscador -->
           <li><a href="#buscador" role="tab"><i class="fa-solid fa-magnifying-glass-location"></i></a></li>
           <!-- Cargar capas -->
-          <li><a href="#cargar" role="tab" title="Cargar capas"><i class="fa-solid fa-cloud-arrow-up"></i></a></li>         
+          <li><a href="#cargar" role="tab" title="Cargar capas"><i class="fa-solid fa-cloud-arrow-up"></i></a></li>
           <!-- Descargar capas -->
-          <li><a href="#descargar" role="tab" title="Descargar capas"><i class="fa-solid fa-cloud-arrow-down"></i></a></li>         
-          </ul>
-          <!-- Pestañas dispuestas en la parte inferior -->
-          <ul>
+          <li><a href="#descargar" role="tab" title="Descargar capas"><i class="fa-solid fa-cloud-arrow-down"></i></a>
+          </li>
+        </ul>
+        <!-- Pestañas dispuestas en la parte inferior -->
+        <ul>
           <!-- Información de contacto -->
-          <li><a href="#contacto" role="tab" title="Información de contacto"><i class="fa-solid fa-circle-info"></i></a></li>          
-          </ul>
-         </div>
+          <li><a href="#contacto" role="tab" title="Información de contacto"><i
+                class="fa-solid fa-circle-info"></i></a></li>
+        </ul>
+      </div>
 
-    
-    <!-- Contenido de cada pestaña -->
-    <div class="leaflet-sidebar-content">
+      <!-- Contenido de cada pestaña -->
+      <div class="leaflet-sidebar-content">
         <!-- Pestañas dispuestas en la parte superior -->
         <!-- Registrar Lugar de Interes Geologico (LIG) -->
         <div class="leaflet-sidebar-pane" id="agregar">
-            <h1 class="leaflet-sidebar-header">
-              Agregar LIG
-              <span class="leaflet-sidebar-close"><i class="fa fa-caret-right" aria-hidden="true"></i></span>
+          <h1 class="leaflet-sidebar-header">
+            Agregar LIG
+            <span class="leaflet-sidebar-close"><i class="fa fa-caret-right" aria-hidden="true"></i></span>
           </h1>
           <p class="text-justify">Aquí puedes ingresar un punto geográfico que consideres como un potencial LIG.
             Para eso necesitas dibujar un marcador e ingresar la información en el siguiente formulario:</p>
-            <div id="datosEditpane">
-              <div class="form-group">
-                <label>Nombre:</label><br>
-                <input type="text" class="form-control" id="lig_name">
-              </div>
-              <div class="form-group">
-                <label>Código:</label><br>
-                <input type="text" class="form-control" id="lig_code">
-              </div>
-              <div class="form-group">
-                <label>Fecha de ingreso:</label><br>
-                <input type="date" class="form-control" id="lig_fecha">
-              </div>
-              <div class="form-group">
-                <label>Latitud (Norte):</label><br>
-                <input type="number" step=0.000000000000001 class="form-control" id="lig_norte">
-              </div>
-              <div class="form-group">
-                  <label>Longitud (Este):</label><br>
-                  <input type="number" step=0.000000000000001 class="form-control" id="lig_este">
-              </div>
-              <div class="form-group">
-                <label>Tipología:</label><br>
-                <select class="form-control" id="lig_tipologia" >
-                    <option value="01">Científico</option>
-                    <option value="02">Turístico</option>
-                    <option value="03">Educativo</option>
-                    <option value="04">Mixto</option>
-                </select>
-              </div>
-              <div class="form-group"id="lig_descripcion">
-                <label>Descripción</label><br>
-                <textarea class="form-control" rows="3" id="lig_obs"></textarea/>
-              </div>
-              <div class="form-group">
-                <label>Responsable:</label><br>
-                <input type="text" class="form-control" id="lig_respon">
-              </div>
-              <br>
-              <div class="form-group">
-                <button type="button" class="btn btn-comun" onClick="miApp.GuardarLIG()"> Guardar LIG</button>
-                <button type="reset" class="btn btn-comun" value="Cancelar">Cancelar</button>
-
-              </div>
-              
+          <div id="datosEditpane">
+            <div class="form-group">
+              <label>Nombre:</label><br>
+              <input type="text" class="form-control" id="lig_name">
             </div>
+            <div class="form-group">
+              <label>Código:</label><br>
+              <input type="text" class="form-control" id="lig_code">
+            </div>
+            <div class="form-group">
+              <label>Región:</label><br>
+              <input type="text" class="form-control" id="lig_region">
+            </div>
+            <div class="form-group">
+              <label>Fecha de ingreso:</label><br>
+              <input type="date" class="form-control" id="lig_fecha">
+            </div>
+            <div class="form-group">
+              <label>Latitud (Norte):</label><br>
+              <input type="number" step=0.000000000000001 class="form-control" id="lig_norte">
+            </div>
+            <div class="form-group">
+              <label>Longitud (Este):</label><br>
+              <input type="number" step=0.000000000000001 class="form-control" id="lig_este">
+            </div>
+            <div class="form-group">
+              <label>Tipología:</label><br>
+              <select class="form-control" id="lig_tipologia">
+                <option value="01">Científico</option>
+                <option value="02">Turístico</option>
+                <option value="03">Educativo</option>
+                <option value="04">Mixto</option>
+              </select>
+            </div>
+            <div class="form-group" id="lig_descripcion">
+              <label>Descripción</label><br>
+              <textarea class="form-control" rows="3" id="lig_obs"></textarea/>
+            </div>
+            <div class="form-group">
+              <label>Responsable:</label><br>
+              <input type="text" class="form-control" id="lig_respon">
+            </div>
+            <br>
+            <div class="form-group">
+              <button type="button" class="btn btn-comun" onClick="miApp.GuardarLIG()"> Guardar LIG</button>
+              <button type="reset" class="btn btn-comun" value="Cancelar">Cancelar</button>
+
+            </div>
+            
+          </div>
         </div>
 
 
@@ -407,6 +246,7 @@
             </h1>
             <p class="text-justify">Selecciona los elementos de interés segun sus características:</p>
             <div id="capasContent"></div>
+            
         </div>
 
         <!-- Selector de mapa base -->
@@ -437,19 +277,14 @@
               <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
           </h1>
           <p>Aqui puedes cargas diversas capas a la vez en diferentes formatos 
-             y personalizar tu visor. Compatible con archivos en formato:<br>
-             <br>
+            y personalizar tu visor. Compatible con archivos en formato:<br>
+            <br>
             - KML (.kml) y KMZ (.kmz)<br>
             - Shapefile comprimido (.zip)<br>
-            - GeoJSON (.json)<br>
-            - Raster  (.tif)<br></p>
-            <form method="post" action="index.php" enctype="multipart/form-data">            
-            <input class="file-cargarCapa" type="file" id="files" name="files[]" multiple="">
-            <br>
-            <br>  
-            <input type="submit" class="btn btn-comun" value="Cargar">
-            <input type="reset" class="btn btn-comun" value="Cancelar">
-            </form>
+            - GeoJSON (.json)<br>         
+            <input class="file-cargarCapa" type="file" id="files" name="files[]" multiple>
+            <div class="b-border w-100"></div>
+            <div id="content-input-cargarCapa" class="container-fluid"></div>
           <div id="cargarContent"></div>
         </div>
 
@@ -458,83 +293,65 @@
           <h1 class="leaflet-sidebar-header">
               Descargar capas
               <span class="leaflet-sidebar-close"><i class="fa fa-caret-right" aria-hidden="true"></i></span>
-               </h1>
-               <p>Aqui puedes descargas diversas capas en formato:<br>
+          </h1>
+              Aqui puedes descargar los LIG en los siguientes formatos:<br>
                 <br>
-               - KML (.kml) y KMZ (.kmz)<br>
-               - Shapefile comprimido (.zip)<br>
-               - GeoJSON (.json)<br>
-               - Raster  (.tif)<br></p>
-               <div id="descargapane">
-                <label for="capa_descarga">Capa a Descargar: </label>
-                <select id="capa_descarga" class="form-control select-data">
-                  <option value="0">Datos a descargar</option>
-                </select>
-                <br>
+              - Shapefile comprimido (.zip)<br>
+              - GeoJSON (.json)<br>
+              <div id="descargapane">
                 <label class="mt-3" for="tipo_descarga">Descargar en Formato: </label>
                 <select id="tipo_descarga" class="form-control select-data">
-                  <option value="geojson">KML</option>
-                  <option value="geojson">KMZ</option>
                   <option value="shp">Shapefile</option>
                   <option value="geojson">GeoJSON</option>
-                  <option value="geojson">Raster</option>
                 </select>
                 <br>
-                <br>
                 <input type="button" class="btn btn-comun" value="Descargar">
-               </div>            
-              </div>
+              </div>            
+        </div>
         <!-- Pestañas dispuestas en la parte inferior -->
         <!-- Informacion de contacto -->
         <div class="leaflet-sidebar-pane" id="contacto">
           <h1 class="leaflet-sidebar-header">
               Información de contacto
               <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
-               </h1>
-                <p> Este visor ha sido desarrollado por el Grupo de Investigación 
-                   en Geología Ambiental y Tectónica, y el Semillero de 
-                   Investigación en Geología Regional y Geoquimica, de la 
-                   Universidad EAFIT - 2023/2024. Los desarrolladores principales de 
-                   este portal piloto fueron:</p>
-   
-                   <div>
-                     <img src="img/maria.png" alt="Avatar" style="width:270px">
-                     <h3 class="text-justify">
-                     <p>Maria Isabel Marín Cerón</p></h3>
-                     <a>mmarince@eafit.edu.co</a>
-                     <p><ul>
-                      <li>Ingeniera geóloga, Universidad Nacional de Colombia - Sede Medellín (2000)</li>
-                      <li>Mágister en Ciencias de la Tierra e Ingeniería Ambiental, Universidad de Shiman, Japón (2004)</li>
-                      <li>Especialista en Ingeniería Ambiental y Sanitaria, Universidad del Valle (2005)</li>
-                      <li>Doctora en Ciencias de la Tierra, Universidad de Okayama, Japón (2007)</li>
-                      <li>Profesora Asociada de la Universidad EAFIT, Medellín (200X - Presente)</li>
-                      <li>Minister of Science Fellow at Germany! (2023-2024?)</li>
-                     </ul>
-                   </div>
-   
-                     <div>
-                       <img src="img/santiago.png" alt="Avatar" style="width:270px">
-                       <h3 class="text-justify">
-                       <p>Santiago Noriega Londoño</p></h3>
-                       <a>santiageo@gmail.com</a>
-                       <p><ul>
-                        <li>Ingeniero geólogo, Universidad Nacional de Colombia - Sede Medellín (2013)</li>
-                        <li>Magister en Ingeniería - Recursos Minerales, Universidad Nacional de Colombia - Sede Medellín (2016)</li>
-                        <li>Doctor en Ciencias de la Tierra, Universidad EAFIT, Medellín (2023)</li>
-                       </ul>
-                       </div>
-              <div id="usuarioContent"></div>                
-            </div>   
-        
-         </div>
-       </div>
-     </div>
-    </div>	
-   </div>
+          </h1>
+          <p> Este visor ha sido desarrollado por el Grupo de Investigación 
+              en Geología Ambiental y Tectónica, y el Semillero de 
+              Investigación en Geología Regional y Geoquimica, de la 
+              Universidad EAFIT - 2023/2024. Los desarrolladores principales de 
+              este portal piloto fueron:</p>
+  
+          <div>
+            <img src="img/maria.png" alt="Avatar" style="width:270px">
+            <h3 class="text-justify">
+            <p>Maria Isabel Marín Cerón</p></h3>
+            <a>mmarince@eafit.edu.co</a>
+            <p><ul>
+            <li>Ingeniera geóloga, Universidad Nacional de Colombia - Sede Medellín (2000)</li>
+            <li>Mágister en Ciencias de la Tierra e Ingeniería Ambiental, Universidad de Shiman, Japón (2004)</li>
+            <li>Especialista en Ingeniería Ambiental y Sanitaria, Universidad del Valle (2005)</li>
+            <li>Doctora en Ciencias de la Tierra, Universidad de Okayama, Japón (2007)</li>
+            <li>Profesora Asociada de la Universidad EAFIT, Medellín (200X - Presente)</li>
+            <li>Minister of Science Fellow at Germany! (2023-2024?)</li>
+            </ul>
+          </div>
+  
+          <div>
+                <img src="img/santiago.png" alt="Avatar" style="width:270px">
+                <h3 class="text-justify">
+                <p>Santiago Noriega Londoño</p></h3>
+                <a>santiageo@gmail.com</a>
+                <p><ul>
+                <li>Ingeniero geólogo, Universidad Nacional de Colombia - Sede Medellín (2013)</li>
+                <li>Magister en Ingeniería - Recursos Minerales, Universidad Nacional de Colombia - Sede Medellín (2016)</li>
+                <li>Doctor en Ciencias de la Tierra, Universidad EAFIT, Medellín (2023)</li>
+                </ul>
+          </div>            
+        </div>   
+      
+      </div>
+    </div>
+  </main>
 
-
-   
-
-</main>
 </body>
 </html>
