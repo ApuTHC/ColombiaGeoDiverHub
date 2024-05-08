@@ -1,89 +1,357 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.11.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.11.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.11.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<!-- Metadatos del archivo HTML-->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+  content="Escuela de Ciencias Aplicadas e Ingeniería de la Universidad EAFIT. Portal de Geodiversidad del Valle de Aburrá">
+<meta name="keywords" content="Geodiversidad, Geoconservación, Georutas, Patrimonio Geológico, Recursos Naturales">
+<meta name="author" content="Santiago Noriega Londoño y Maria Isabel Marín Cerón">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+
+<head>
+  <!-- Enlace a las fuentes de google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300;600;900&display=swap" rel="stylesheet">
+
+  <!-- Librería FontAwasome para el uso fácil de iconos en la página -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Librerías de Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Librería para usar recursos ESRI-Leaflet -->
+  <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet-vector@4.2.3/dist/esri-leaflet-vector.js" crossorigin=""></script>
+
+  <!-- Enlace al archivo JavaScript de jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Librería bootstrap para el uso de componentes de la página -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+
+  <!-- Librería para el control de barra lateral -->
+  <link rel="stylesheet" href="css/leaflet-sidebar.css">
+  <script src="js/leaflet-sidebar.min.js"></script>
+
+  <!-- Librerías para el control de capas -->
+  <link rel="stylesheet" href="css/L.multiControl.css">
+  <script src="js/L.multiControl.js"></script>
+
+  <!-- Librerías para el control de mapas base -->
+  <link rel="stylesheet" href="css/L.switchBasemap.css">
+  <script src="js/L.switchBasemap.js"></script>
+
+  <!-- Librerías para la herramienta de dibujo -->
+  <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+  <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+  <!-- Librerías para la barra de busqueda -->
+  <link rel="stylesheet" href="css/leaflet.fusesearch.css">
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+  <script src="js/leaflet.fusesearch.js"></script>
+
+  <!-- Librerías para el minimapa -->
+  <link rel="stylesheet" href="css/Control.MiniMap.css" />
+  <script src="js/Control.MiniMap.js" type="text/javascript"></script>
+
+  <!-- Notificaciones -->
+  <script src="js/leaflet-notifications.js"></script>
+  <link rel="stylesheet" href="css/leaflet-notifications.css">
+
+  <!-- Firebase -->
+  <script src="js/firebase-app-compat.js"></script>
+  <script src="js/firebase-database-compat.js"></script>
+  <script src="js/firebase-auth-compat.js"></script>
+  <script src="js/firebase-ui-auth.js"></script>
+
+  <!-- Plugins pára visualización de información tipo KML -->
+  <script src="js/leaflet-kml.js"></script>
+  <!-- Plugins pára visualización de información tipo KMZ -->
+  <script src="js/leaflet-kmz.js"></script>
+  <script src="js/jszip.min.js"></script>
+  <script src="js/togeojson.js"></script>
+  <!-- Plugins pára visualización de información tipo SHP -->
+  <script src="js/shp.js"></script>
+  <script src="js/leaflet.shpfile.js"></script>
+  <!-- FileSaver -->
+  <script src="js/circuler.js"></script>
+  <script src="js/FileSaver.min.js"></script>
+  <!-- Download Shapefile from GeoJSON -->
+  <script src="js/shpwrite.js"></script>
+
+  
+  <link rel="stylesheet" href="css/MarkerCluster.css">
+  <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+  <script src="js/leaflet.markercluster.js"></script>
+
+  <!-- Archivos Propios -->
+  <script src="data/data.js"></script>
+  <script src="data/aburra.js"></script>
+  <script src="data/nuqui.js"></script>
+  <script src="data/sanrafael.js"></script>
+  <script src="data/snsm.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/server.js"></script>
+  <script src="js/map.js"></script>
+  
+
+
+  <title>ColombiaGeoDiverHub</title>
+</head>
+
+
+<body>
+  <!-- Encabezado -->
+  <header>
+    <!-- Menu principal del portal-->
+    <!--CONTENEDOR CON ELEMENTOS DE LA BARRA DE NAVEGACION SUPERIOR-->
+    <div class="menu-container dropdown">
+      <a class="dropdown-toggle" href="#" role="button" id="menuGeoDiv" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-bars"></i></a>
+      <div class="dropdown-menu" aria-labelledby="menuGeoDiv" id="menu-content">
+      </div>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+    <div class="title-box">
+        <h2>ColombiaGeoDiverHub<br>
+          <h6><i>Un Enfoque Integrado para la
+              Gestión de la Diversidad Bio-Geo-Cultural del Paisaje</i></h6>
+        </h2>
+    </div>
+  </header>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+  <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+      </div>
+    </div>
+  </div>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+  <!-- Mapa -->
+  <main>
+    <div id="map"></div>
+    <!-- Barra Lateral -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+      <!-- Pestañas de navegación -->
+      <div class="leaflet-sidebar-tabs">
+        <!-- Pestañas dispuestas en la parte superior -->
+        <ul role="tablist">
+          <!-- Registrar Lugar de Interes Geologico (LIG) -->
+          <li><a href="#agregar" role="tab" title="Agregar LIG"><i class="fa-solid fa-pen-to-square"></i></a></li>
+          <!-- Control de Capas cargadas en el visor -->
+          <li><a href="#capas" role="tab" title="Control de Capas"><i class="fa-solid fa-layer-group"></i></a></li>
+          <!-- Seleccion de Mapa Base -->
+          <li><a href="#mapabase" role="tab" title="Selección de Mapa Base"><i class="fa-solid fa-map"></i></a></li>
+          <!-- Buscador -->
+          <li><a href="#buscador" role="tab"><i class="fa-solid fa-magnifying-glass-location"></i></a></li>
+          <!-- Cargar capas -->
+          <li><a href="#cargar" role="tab" title="Cargar capas"><i class="fa-solid fa-cloud-arrow-up"></i></a></li>
+          <!-- Descargar capas -->
+          <li><a href="#descargar" role="tab" title="Descargar capas"><i class="fa-solid fa-cloud-arrow-down"></i></a>
+          </li>
+        </ul>
+        <!-- Pestañas dispuestas en la parte inferior -->
+        <ul>
+          <!-- Información de contacto -->
+          <li><a href="#contacto" role="tab" title="Información de contacto"><i
+                class="fa-solid fa-circle-info"></i></a></li>
+        </ul>
+      </div>
+
+      <!-- Contenido de cada pestaña -->
+      <div class="leaflet-sidebar-content">
+        <!-- Pestañas dispuestas en la parte superior -->
+        <!-- Registrar Lugar de Interes Geologico (LIG) -->
+        <div class="leaflet-sidebar-pane" id="agregar">
+          <h1 class="leaflet-sidebar-header">
+            Agregar LIG
+            <span class="leaflet-sidebar-close"><i class="fa fa-caret-right" aria-hidden="true"></i></span>
+          </h1>
+          <p class="text-justify">Aquí puedes ingresar un punto geográfico que consideres como un potencial LIG.
+            Para eso necesitas dibujar un marcador e ingresar la información en el siguiente formulario:</p>
+          <div id="datosEditpane">
+            <div class="form-group">
+              <label>Nombre:</label><br>
+              <input type="text" class="form-control" id="lig_name">
+            </div>
+            <div class="form-group">
+              <label>Código:</label><br>
+              <input type="text" class="form-control" id="lig_code">
+            </div>
+            <div class="form-group">
+              <label>Región:</label><br>
+              <input type="text" class="form-control" id="lig_region">
+            </div>
+            <div class="form-group">
+              <label>Fecha de ingreso:</label><br>
+              <input type="date" class="form-control" id="lig_fecha">
+            </div>
+            <div class="form-group">
+              <label>Latitud (Norte):</label><br>
+              <input type="number" step=0.000000000000001 class="form-control" id="lig_norte">
+            </div>
+            <div class="form-group">
+              <label>Longitud (Este):</label><br>
+              <input type="number" step=0.000000000000001 class="form-control" id="lig_este">
+            </div>
+            <div class="form-group">
+              <label>Tipología:</label><br>
+              <select class="form-control" id="lig_tipologia">
+                <option value="01">Científico</option>
+                <option value="02">Turístico</option>
+                <option value="03">Educativo</option>
+                <option value="04">Mixto</option>
+              </select>
+            </div>
+            <div class="form-group" id="lig_descripcion">
+              <label>Descripción</label><br>
+              <textarea class="form-control" rows="3" id="lig_obs"></textarea/>
+            </div>
+            <div class="form-group">
+              <label>Responsable:</label><br>
+              <input type="text" class="form-control" id="lig_respon">
+            </div>
+            <br>
+            <div class="form-group">
+              <button type="button" class="btn btn-comun" onClick="miApp.GuardarLIG()"> Guardar LIG</button>
+              <button type="reset" class="btn btn-comun" value="Cancelar">Cancelar</button>
+
+            </div>
+            
+          </div>
+        </div>
+
+
+        <!-- Control de Capas cargadas en el visor -->
+        <div class="leaflet-sidebar-pane" id="capas">
+            <h1 class="leaflet-sidebar-header">
+                Control de capas
+                <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+            </h1>
+            <p class="text-justify">Selecciona los elementos de interés segun sus características:</p>
+            <div id="capasContent"></div>
+            
+        </div>
+
+        <!-- Selector de mapa base -->
+        <div class="leaflet-sidebar-pane" id="mapabase">
+            <h1 class="leaflet-sidebar-header">
+                Selector de mapa base
+                <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+            </h1>
+            <p class="text-justify">Selecciona el mapa base que desees:</p>
+            <div id="basemapContent"></div>
+        </div>
+        
+        <!-- Buscador -->
+        <div class="leaflet-sidebar-pane" id="buscador">
+            <h1 class="leaflet-sidebar-header">
+                Buscador
+                <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+            </h1>
+            <p class="text-justify">Escribe el nombre del elemento que desees buscar:</p>
+            <div id="buscadorContent"></div>
+        </div>
+        <!--  -->
+
+        <!-- Cargar capas -->
+        <div class="leaflet-sidebar-pane" id="cargar">
+          <h1 class="leaflet-sidebar-header">
+              Cargar capas
+              <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+          </h1>
+          <p>Aqui puedes cargas diversas capas a la vez en diferentes formatos 
+            y personalizar tu visor. Compatible con archivos en formato:<br>
+            <br>
+            - KML (.kml) y KMZ (.kmz)<br>
+            - Shapefile comprimido (.zip)<br>
+            - GeoJSON (.json)<br>         
+            <input class="file-cargarCapa" type="file" id="files" name="files[]" multiple>
+            <div class="b-border w-100"></div>
+            <div id="content-input-cargarCapa" class="container-fluid"></div>
+          <div id="cargarContent"></div>
+        </div>
+
+        <!-- Descargar capas -->
+        <div class="leaflet-sidebar-pane" id="descargar">
+          <h1 class="leaflet-sidebar-header">
+              Descargar capas
+              <span class="leaflet-sidebar-close"><i class="fa fa-caret-right" aria-hidden="true"></i></span>
+          </h1>
+              Aqui puedes descargar los LIG en los siguientes formatos:<br>
+                <br>
+              - Shapefile comprimido (.zip)<br>
+              - GeoJSON (.json)<br>
+              <div id="descargapane">
+                <label class="mt-3" for="tipo_descarga">Descargar en Formato: </label>
+                <select id="tipo_descarga" class="form-control select-data">
+                  <option value="shp">Shapefile</option>
+                  <option value="geojson">GeoJSON</option>
+                </select>
+                <br>
+                <input type="button" class="btn btn-comun" value="Descargar">
+              </div>            
+        </div>
+        <!-- Pestañas dispuestas en la parte inferior -->
+        <!-- Informacion de contacto -->
+        <div class="leaflet-sidebar-pane" id="contacto">
+          <h1 class="leaflet-sidebar-header">
+              Información de contacto
+              <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+          </h1>
+          <p> Este visor ha sido desarrollado por el Grupo de Investigación 
+              en Geología Ambiental y Tectónica, y el Semillero de 
+              Investigación en Geología Regional y Geoquimica, de la 
+              Universidad EAFIT - 2023/2024. Los desarrolladores principales de 
+              este portal piloto fueron:</p>
+  
+          <div>
+            <img src="img/maria.png" alt="Avatar" style="width:270px">
+            <h3 class="text-justify">
+            <p>Maria Isabel Marín Cerón</p></h3>
+            <a>mmarince@eafit.edu.co</a>
+            <p><ul>
+            <li>Ingeniera geóloga, Universidad Nacional de Colombia - Sede Medellín (2000)</li>
+            <li>Mágister en Ciencias de la Tierra e Ingeniería Ambiental, Universidad de Shiman, Japón (2004)</li>
+            <li>Especialista en Ingeniería Ambiental y Sanitaria, Universidad del Valle (2005)</li>
+            <li>Doctora en Ciencias de la Tierra, Universidad de Okayama, Japón (2007)</li>
+            <li>Profesora Asociada de la Universidad EAFIT, Medellín (200X - Presente)</li>
+            <li>Minister of Science Fellow at Germany! (2023-2024?)</li>
+            </ul>
+          </div>
+  
+          <div>
+                <img src="img/santiago.png" alt="Avatar" style="width:270px">
+                <h3 class="text-justify">
+                <p>Santiago Noriega Londoño</p></h3>
+                <a>santiageo@gmail.com</a>
+                <p><ul>
+                <li>Ingeniero geólogo, Universidad Nacional de Colombia - Sede Medellín (2013)</li>
+                <li>Magister en Ingeniería - Recursos Minerales, Universidad Nacional de Colombia - Sede Medellín (2016)</li>
+                <li>Doctor en Ciencias de la Tierra, Universidad EAFIT, Medellín (2023)</li>
+                </ul>
+          </div>            
+        </div>   
+      
+      </div>
+    </div>
+  </main>
+
+</body>
 </html>
