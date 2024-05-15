@@ -17,12 +17,13 @@ body{
 
 /* ///////ASPECTO DEL ENCABEZADO DEFINIDO/////////// */
 header{
-  z-index: 9999;
+  z-index: 2;
   position: absolute;
-  top: 1.5vh;
-  left:1.5vh;
-  width: 72vh;
-  height: 10vh;
+  top: 5px;
+  left:5px;
+  width: 280px;
+  max-width: 530px;
+  height: auto;
   margin: 0px;
   padding: 8px;
   background-color: #111;
@@ -35,6 +36,7 @@ header{
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  transition: all 0.25s ease;
 }
 
 .menu-container {
@@ -49,6 +51,13 @@ header{
   margin: auto;
   color: white;
   font-size: 26px;
+  cursor: pointer;
+}
+
+.menu-container .dropdown-menu a {
+  margin: auto;
+  color: white;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -70,9 +79,9 @@ header{
   transition: all 0.25s ease;
 }
 
-.dropdown-menu.show{
-  top: 10px !important;
-  left: -17px !important;
+.dropdown-menu.show {
+  top: 9px !important;
+  left: -12px !important;
   opacity: 1;
 }
 
@@ -82,14 +91,17 @@ header{
 
 
 header h2 {
-  margin: 0px;
-  font-size: 24px;
+  margin: 0;
+  margin-left: 10px;
+  font-size: 20px;
 }
 
 header h6 {
   font-weight: normal;
-  font-size: 13px;
+  font-size: 12px;
   font-style: italic;
+  margin: 0;
+  margin-left: 10px;
 }
 
 
@@ -211,26 +223,19 @@ display: table;
 }
 }
 
-
-
-
-
-
-
-
-
 .leaflet-container {
   font-family: 'Catamaran', sans-serif;
 }
 
 .leaflet-sidebar { 
   position: absolute;
-  top: 20px;
+  top: 80px;
   bottom: 30px;
   width: 100%;
   overflow: hidden;
   z-index: 2000;
   font-weight: normal;
+  transition: all 0.25s ease;
 }
 
 .leaflet-sidebar-content {
@@ -256,6 +261,15 @@ display: table;
 
 #capasContent {
   height: 74vh;
+}
+
+#capasContent .child-container{
+  background: #ddd;
+}
+
+.fa-solid, .fas {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
 }
 
 .leaflet-controllable-legend-body {
@@ -359,12 +373,64 @@ display: table;
 
 
 
+@media (min-width: 577px) {
 
+  header{
+    width: 400px;
+    top: 15px;
+    left:15px;
+  }
 
+  header h2 {
+    margin: 0px;
+    font-size: 24px;
+  }
+  
+  header h6 {
+    font-size: 13px;
+    margin: 0;
+  }
 
+  .menu-container .dropdown-menu  a {
+    font-size: 21px;
+  }
 
+  .dropdown-menu.show {
+    top: 13px !important;
+    left: -18px !important;
+  }
 
+  .leaflet-sidebar { 
+    top: 95px;
+  }
 
+}
 
+@media (min-width: 769px) {
 
+  header{
+    width: 530px;
+  }
 
+  .menu-container .dropdown-menu  a {
+    font-size: 24px;
+  }
+
+  .dropdown-menu.show {
+    top: 4px !important;
+    left: -37px !important;
+  }
+
+  .leaflet-sidebar { 
+    top: 80px;
+  }
+
+}
+
+@media (min-width: 993px) {
+
+  .leaflet-sidebar { 
+    top: 10px;
+  }
+
+}

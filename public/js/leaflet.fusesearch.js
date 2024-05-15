@@ -278,16 +278,15 @@ L.Control.FuseSearch = L.Control.extend({
     
     _getFeaturePopupIfVisible: function(feature) {
         var layer = feature.layer;
-        if (undefined !== layer && this._map.hasLayer(layer)) {
+        // if (undefined !== layer && this._map.hasLayer(layer)) {
             return layer.getPopup();
-        }
+        // }
     },
     
     createResultItem: function(props, container, popup) {
 
         var _this = this;
         var feature = props._feature;
-
         // Create a container and open the associated popup on click
         var resultItem = L.DomUtil.create('p', 'result-item', container);
         
@@ -295,9 +294,11 @@ L.Control.FuseSearch = L.Control.extend({
             L.DomUtil.addClass(resultItem, 'clickable');
             resultItem.onclick = function() {
                 
+                _this._map.setView([feature.layer._latlng.lat, feature.layer._latlng.lng],18)
                 if (window.matchMedia("(max-width:480px)").matches) {
                     _this.hidePanel();
                     feature.layer.openPopup();
+                    
                 } else {
                     _this._panAndPopup(feature, popup);
                 }
@@ -311,7 +312,7 @@ L.Control.FuseSearch = L.Control.extend({
         } else {
             str = '<b>' + props[this._keys[0]] + '</b>';
             for (var i = 1; i < this._keys.length; i++) {
-                str += '<br/>' + props[this._keys[i]];
+                str += '<br/>' + '<b>' + this._keys[i] + ': </b>' + props[this._keys[i]];
             }
             resultItem.innerHTML = str;
         };

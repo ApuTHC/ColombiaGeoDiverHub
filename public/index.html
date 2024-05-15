@@ -88,6 +88,8 @@
   <script src="js/FileSaver.min.js"></script>
   <!-- Download Shapefile from GeoJSON -->
   <script src="js/shpwrite.js"></script>
+  <!-- Date Format -->
+  <script src="js/dateFormat.min.js"></script>
 
   
   <link rel="stylesheet" href="css/MarkerCluster.css">
@@ -229,9 +231,7 @@
             </div>
             <br>
             <div class="form-group">
-              <button type="button" class="btn btn-comun" onClick="miApp.GuardarLIG()"> Guardar LIG</button>
-              <button type="reset" class="btn btn-comun" value="Cancelar">Cancelar</button>
-
+              <button type="button" class="btn btn-comun" onClick="GuardarLIG()"> Guardar LIG</button>
             </div>
             
           </div>
@@ -305,7 +305,7 @@
                   <option value="geojson">GeoJSON</option>
                 </select>
                 <br>
-                <input type="button" class="btn btn-comun" value="Descargar">
+                <input type="button" class="btn btn-comun" value="Descargar" onClick="DescargarDatos()">
               </div>            
         </div>
         <!-- Pestañas dispuestas en la parte inferior -->

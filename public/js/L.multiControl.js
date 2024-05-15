@@ -95,7 +95,7 @@ L.Control.multiControl = L.Control.extend({
               right = L.DomUtil.create('div', 'right'),
               caret = L.DomUtil.create('i', 'fas fa-caret-right'),
               check = L.DomUtil.create('input', 'switch'),
-              zoom  = L.DomUtil.create('button', 'btn fas fa-crosshairs'),
+              zoom  = L.DomUtil.create('button', 'btn fa-solid fa-crosshairs'),
               close  = L.DomUtil.create('button', 'btn fas fa-times'),
               inputsContainer = L.DomUtil.create('div', 'inputsContainer hidden')
 
