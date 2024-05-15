@@ -12,280 +12,285 @@ var capaDescarga = L.layerGroup();
 
 var datos_modal = {}
 
-// Esperamos a que el documento esté listo
-$(document).ready(function () {
+  // Esperamos a que el documento esté listo
+  $(document).ready(function () {
 
-  // Inicializamos el mapa en una posición y con un zoom determinados
-  map = L.map('map').setView([5.5, -74], 5);
+    // Inicializamos el mapa en una posición y con un zoom determinados
+    map = L.map('map').setView([5.5, -74], 5);
 
-  AddMenu();
+    AddMenu();
 
-  var today = new Date().toISOString().split('T')[0];
-  $("#lig_fecha").val(today);
-  
-  // Añadimos el mapa base de OpenStreetMap con relieve
-  var osm = L.tileLayer('https://tile.osm.ch/switzerland/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-
-
-  // Añadimos el poligono de regiones naturales de Colombia desde Arcgis.com
-  var reg_colombia = L.esri.featureLayer({
-    url: "https://services6.arcgis.com/DDaVpjlpeb7RGXHg/arcgis/rest/services/Regiones_Naturales_de_Colombia/FeatureServer/0"
-  });
-  reg_colombia.addTo(map);
-
-  var ligs;
-  markers.clearLayers();
-  capaPuntos.clearLayers();
-  capaDescarga.clearLayers();
-  database.ref().child("lig").get().then((snapshot) => {
-    if (snapshot.exists()) {
-        this.database = snapshot.val();
-        db = snapshot.val();
-        console.log(db);
-        for (let i = 0; i < db.length; i++) {
-            const element = db[i];
-            if (element.active){
-                auxLng = element['lng'];
-                auxLat = element['lat'];
-                var point = L.marker([auxLat, auxLng]).toGeoJSON();                
-                L.extend(point.properties, {
-                    id: i,
-                    Codigo: element['code'],
-                    Fecha: element['date'],
-                    Descripcion: element['info'],
-                    Norte: element['lat'],
-                    Este: element['lng'],
-                    Nombre: element['name'],
-                    Region: element['region'],
-                    Tipologia: element['type'],
-                    Responsable: element['user'],
-                    
-                });
-                L.geoJson(point,{
-                    onEachFeature: function(feature, layer) {
-                      feature.layer = layer;
-                      if (feature.properties) {
-                        layer.bindPopup(Object.keys(feature.properties).map(function(k) {
-                          return k + ": " + feature.properties[k];
-                        }).join("<br />"), {
-                          maxHeight: 200
-                        });
-                      }
-                    }
-                }).addTo(markers);
-
-                var point1 = L.marker([auxLat, auxLng]).toGeoJSON();                
-                L.extend(point1.properties, {
-                    id: i,
-                    Codigo: element['code'],
-                    Fecha: element['date'],
-                    Descripcion: element['info'],
-                    Norte: element['lat'],
-                    Este: element['lng'],
-                    Nombre: element['name'],
-                    Region: element['region'],
-                    Tipologia: element['type'],
-                    Responsable: element['user'],
-                    
-                });
-                L.geoJson(point1).addTo(capaDescarga);
-                
-            }
-            
-        }
-        markers.addTo(capaPuntos);
-        markers.addTo(map);
-        notification.success('¡Listo!', 'Se cargó con exito los LIG');
-        console.log(capaPuntos.toGeoJSON());
-        // Añadimos la capa de municipio al control de búsqueda con los campos que queremos filtrar y que se muestrarán en la busqueda
-        searchCtrl.indexFeatures(markers.toGeoJSON(), ['Codigo', 'Descripcion','Nombre', 'Region', 'Tipologia', 'Responsable']);
-		
-    } else {
-        console.log("No data available");
-        notification.alert('¡Error!', 'Ocurrió un error al intentar cargar los LIG de la base de datos, no hay datos');
-    }
-  }).catch((error) => {
-      notification.alert('¡Error!', 'Ocurrió un error al intentar cargar los LIG');
-      console.log(error);
-  });
-
-  database.ref().child("lig").orderByKey().limitToLast(1).on('value', function(snapshot) {
-    var lastKey = Object.keys(snapshot.val())[0];
-    arraySize = parseInt(lastKey) + 1; // Sumamos 1 porque los índices comienzan en 0
-    console.log('Tamaño del array:', arraySize);
-  });
-
-
-  // Creamos un mapa base satelital de ESRI
-  var imagery = L.esri.basemapLayer('Imagery');
-
-  /* <------------------- Barra Lateral -------------------> */
-
-  // Inicializamos la barra lateral y la añadimos al mapa
-  sidebar = L.control.sidebar({
-    autopan: false,       // whether to maintain the centered map point when opening the sidebar
-    closeButton: true,    // whether t add a close button to the panes
-    container: 'sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
-    position: 'right',     // left or right
-  }).addTo(map);
-
-
-  /* <------------------- Control de Capas -------------------> */
-
-  // Creamos un objeto con las capas y sus nombres que queremos que aparezcan en el control de capas
-  const overlays = [
-    {name: 'Regiones Colombia', layer: reg_colombia},
-  ];
-  // Creamos el control de capas y lo añadimos al mapa
-  legend = L.multiControl(overlays, {position:'topright', label: 'Control de capas'}).addTo(map);
-  
-  // Añadimos el contenido del control de capas a la barra lateral
-  $("#capasContent").append($(legend._container).find(".leaflet-controllable-legend-body"));
-  // Borramos el contenedor del control de capas del mapa
-  $(legend._container).remove();
-
-
-  /* <------------------- Control de Mapa Base -------------------> */
-
-  // Creamos un array con los objetos que contengan los mapas base, imagenes y nombres que queremos que aparezcan en el control de mapas base
-  const basemaps_array = [
-    {
-      layer: osm, //DEFAULT MAP
-      icon: 'img/img1.PNG',
-      name: 'OpenStreetMap'
-    },
-    {
-      layer: imagery,
-      icon: 'img/img2.PNG',
-      name: 'Imagery ESRI'
-    },
-    {
-      layer: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-      }),
-      icon: 'img/img3.PNG',
-      name: 'OpenTopoMap'
-    },
-  ];
-
-  // Creamos el control de mapas base y lo añadimos al mapa
-  const basemaps = new L.basemapsSwitcher(basemaps_array, { position: 'topright' }).addTo(map);
-  
-  // Añadimos el contenido del control de mapas base a la barra lateral
-  $("#basemapContent").append($(basemaps._container));
-  // Removemos la clase que oculta los mapabase
-  $(basemaps._container).find(".basemapImg").removeClass("hidden");
-
-
-
-  /* <------------- Control de Herramienta de MiniMapa -------------------> */
-
-  // Creamos el mapa base para el minimapa
-  var osm2 = new L.TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {minZoom: 0, maxZoom: 13, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' });
-  // Se crean los estilos para el rectangulo y la sombra que representa el area visible en el minimapa
-  var rect1 = {color: "#ff1100", weight: 3};
-  var rect2 = {color: "#0000AA", weight: 1, opacity:0, fillOpacity:0};
-  // Creamos el control de minimapa y lo añadimos al mapa
-  var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true, aimingRectOptions : rect1, shadowRectOptions: rect2, position: "bottomleft"}).addTo(map);
-
-
-/* <------------------- Control de escala grafica -------------------> */
-L.control.scale({position: "bottomleft", maxWidth: 100, metric: true, imperial: false}).addTo(map);
+    var today = new Date().toISOString().split('T')[0];
+    $("#lig_fecha").val(today);
     
-/* <------------------- Control de botones de zoom -------------------> */
-map.zoomControl.setPosition('bottomleft');
+    // Añadimos el mapa base de OpenStreetMap con relieve
+    var osm = L.tileLayer('https://tile.osm.ch/switzerland/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
-  /* <------------- Control de Herramienta de Dibujo ------------> */
 
-  // Creamos el control de dibujo y lo añadimos al mapa
-  map.pm.addControls({
-    position: 'bottomleft',
-    drawMarker: true,
-    drawPolyline: false,
-    drawPolygon: false,
-    
-    drawRectangle: false,
-    drawCircle: false,
-    drawCircleMarker: false,
-    drawText: false,
-
-    editMode: false,
-    dragMode:true,
-    cutPolygon:false,
-    removalMode: false,
-    rotateMode: false
-  });
-  map.pm.setGlobalOptions({'snappable':false})
-
-  map.on('pm:create', function (e) {
-    var layer = e.layer;
-    console.log(layer);
-    sidebar.open('agregar');
-    $("#lig_norte").val(layer._latlng.lat);
-    $("#lig_este").val(layer._latlng.lng);
-    layer.on('pm:edit', (e) => {
-      console.log(e.layer);
-      $("#lig_norte").val(e.layer._latlng.lat);
-      $("#lig_este").val(e.layer._latlng.lng);
-      sidebar.open('agregar');
+    // Añadimos el poligono de regiones naturales de Colombia desde Arcgis.com
+    var reg_colombia = L.esri.featureLayer({
+      url: "https://services6.arcgis.com/DDaVpjlpeb7RGXHg/arcgis/rest/services/Regiones_Naturales_de_Colombia/FeatureServer/0"
     });
-  });
+    reg_colombia.addTo(map);
 
+    var ligs;
+    markers.clearLayers();
+    capaPuntos.clearLayers();
+    capaDescarga.clearLayers();
+    database.ref().child("lig").get().then((snapshot) => {
+      if (snapshot.exists()) {
+          this.database = snapshot.val();
+          db = snapshot.val();
+          console.log(db);
+          for (let i = 0; i < db.length; i++) {
+              const element = db[i];
+              if (element.active){
+                  auxLng = element['lng'];
+                  auxLat = element['lat'];
+                  var point = L.marker([auxLat, auxLng]).toGeoJSON();                
+                  L.extend(point.properties, {
+                      id: i,
+                      Codigo: element['code'],
+                      Fecha: element['date'],
+                      Descripcion: element['info'],
+                      Norte: element['lat'],
+                      Este: element['lng'],
+                      Nombre: element['name'],
+                      Region: element['region'],
+                      Tipologia: element['type'],
+                      Responsable: element['user'],
+                      
+                  });
+                  L.geoJson(point,{
+                      onEachFeature: function(feature, layer) {
+                        feature.layer = layer;
+                        if (feature.properties) {
+                          layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                            return k + ": " + feature.properties[k];
+                          }).join("<br />"), {
+                            maxHeight: 200
+                          });
+                        }
+                      }
+                  }).addTo(markers);
 
-  notification = L.control.notifications({
-    timeout: 4000,
-    position: 'bottomright',
-    closable: true,
-    dismissable: true,
-    className: 'pastel'
-  }).addTo(map);
-
-
-  /* <----------- Control de Herramienta de Busqueda ----------> */
-
-  // Creamos el control de búsqueda y lo añadimos al mapa
-  searchCtrl = L.control.fuseSearch().addTo(map);
-
-
-  // Añadimos el contenido del control de búsqueda a la barra lateral
-  $("#buscadorContent").append($(".leaflet-fusesearch-panel .content"));
-  // Removemos el botón y contenedor del control de búsqueda del mapa
-  $(searchCtrl._container).remove();
-  // Añadimos un ícono de búsqueda al control de búsqueda
-  $(".content .header").prepend('<i class="fa-solid fa-magnifying-glass-location"></i>');
-  // Removemos el botón de cerrar del control de búsqueda
-  $(".content .header .close").remove();    
-          
-  $('#dataModal').on('show.bs.modal', function (e) {
-    console.log($(e.relatedTarget).data('whatever'));
-    $(".modal-title").html(datos_modal[$(e.relatedTarget).data('whatever')]["title"]);
-    $(".modal-body").html(datos_modal[$(e.relatedTarget).data('whatever')]["html_content"]);
-  })
-
-  $('#files').change(function(evt) {
-    var files = evt.target.files; 
-    for (var i = 0, f; f = files[i]; i++) {
-      if (f.name.slice(-3) === 'zip') {
-          GraficarFileSHP(f);
-      }else if (f.name.slice(-3) === 'kml') {
-          GraficarFileKML(f);
-      }else if (f.name.slice(-3) === 'kmz') {
-          GraficarFileKMZ(f);
-      }else if (f.name.slice(-4) === 'json') {
-          GraficarFileGeoJSON(f);
-      }else{
-          notification.alert('Atención', 'Tipo de archivo incorrecto');
+                  var point1 = L.marker([auxLat, auxLng]).toGeoJSON();                
+                  L.extend(point1.properties, {
+                      id: i,
+                      Codigo: element['code'],
+                      Fecha: element['date'],
+                      Descripcion: element['info'],
+                      Norte: element['lat'],
+                      Este: element['lng'],
+                      Nombre: element['name'],
+                      Region: element['region'],
+                      Tipologia: element['type'],
+                      Responsable: element['user'],
+                      
+                  });
+                  L.geoJson(point1).addTo(capaDescarga);
+                  
+              }
+              
+          }
+          markers.addTo(capaPuntos);
+          markers.addTo(map);
+          notification.success('¡Listo!', 'Se cargó con exito los LIG');
+          console.log(capaPuntos.toGeoJSON());
+          // Añadimos la capa de municipio al control de búsqueda con los campos que queremos filtrar y que se muestrarán en la busqueda
+          searchCtrl.indexFeatures(markers.toGeoJSON(), ['Codigo', 'Descripcion','Nombre', 'Region', 'Tipologia', 'Responsable']);
+      
+      } else {
+          console.log("No data available");
+          notification.alert('¡Error!', 'Ocurrió un error al intentar cargar los LIG de la base de datos, no hay datos');
       }
-    }
-  });
-  // Función que asigna el nombre del archivo al texto del input
-  $("#files").on("change", function() {
-      var fileName = $(this).val().split("\\").pop();
-      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-  });
+    }).catch((error) => {
+        notification.alert('¡Error!', 'Ocurrió un error al intentar cargar los LIG');
+        console.log(error);
+    });
+
+    database.ref().child("lig").orderByKey().limitToLast(1).on('value', function(snapshot) {
+      var lastKey = Object.keys(snapshot.val())[0];
+      arraySize = parseInt(lastKey) + 1; // Sumamos 1 porque los índices comienzan en 0
+      console.log('Tamaño del array:', arraySize);
+    });
+
+
+    // Creamos un mapa base satelital de ESRI
+    var imagery = L.esri.basemapLayer('Imagery');
+
+    /* <------------------- Barra Lateral -------------------> */
+
+    // Inicializamos la barra lateral y la añadimos al mapa
+    sidebar = L.control.sidebar({
+      autopan: false,       // whether to maintain the centered map point when opening the sidebar
+      closeButton: true,    // whether t add a close button to the panes
+      container: 'sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
+      position: 'right',     // left or right
+    }).addTo(map);
+
+
+    /* <------------------- Control de Capas -------------------> */
+
+    // Creamos un objeto con las capas y sus nombres que queremos que aparezcan en el control de capas
+    const overlays = [
+      {name: 'Regiones Colombia', layer: reg_colombia},
+    ];
+    // Creamos el control de capas y lo añadimos al mapa
+    legend = L.multiControl(overlays, {position:'topright', label: 'Control de capas'}).addTo(map);
+    
+    // Añadimos el contenido del control de capas a la barra lateral
+    $("#capasContent").append($(legend._container).find(".leaflet-controllable-legend-body"));
+    // Borramos el contenedor del control de capas del mapa
+    $(legend._container).remove();
+
+
+    /* <------------------- Control de Mapa Base -------------------> */
+
+    // Creamos un array con los objetos que contengan los mapas base, imagenes y nombres que queremos que aparezcan en el control de mapas base
+    const basemaps_array = [
+      {
+        layer: osm, //DEFAULT MAP
+        icon: 'img/img1.PNG',
+        name: 'OpenStreetMap'
+      },
+      {
+        layer: imagery,
+        icon: 'img/img2.PNG',
+        name: 'Imagery ESRI'
+      },
+      {
+        layer: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        }),
+        icon: 'img/img3.PNG',
+        name: 'OpenTopoMap'
+      },
+    ];
+
+    // Creamos el control de mapas base y lo añadimos al mapa
+    const basemaps = new L.basemapsSwitcher(basemaps_array, { position: 'topright' }).addTo(map);
+    
+    // Añadimos el contenido del control de mapas base a la barra lateral
+    $("#basemapContent").append($(basemaps._container));
+    // Removemos la clase que oculta los mapabase
+    $(basemaps._container).find(".basemapImg").removeClass("hidden");
+
+
+
+    /* <------------- Control de Herramienta de MiniMapa -------------------> */
+
+    // Creamos el mapa base para el minimapa
+    var osm2 = new L.TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {minZoom: 0, maxZoom: 13, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' });
+    // Se crean los estilos para el rectangulo y la sombra que representa el area visible en el minimapa
+    var rect1 = {color: "#ff1100", weight: 3};
+    var rect2 = {color: "#0000AA", weight: 1, opacity:0, fillOpacity:0};
+    // Creamos el control de minimapa y lo añadimos al mapa
+    var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true, aimingRectOptions : rect1, shadowRectOptions: rect2, position: "bottomleft"}).addTo(map);
+
+
+    /* <------------------- Control de escala grafica -------------------> */
+    L.control.scale({position: "bottomleft", maxWidth: 100, metric: true, imperial: false}).addTo(map);
+        
+    /* <------------------- Control de botones de zoom -------------------> */
+    map.zoomControl.setPosition('bottomleft');
+
+    /* <------------- Control de Herramienta de Dibujo ------------> */
+
+    // Creamos el control de dibujo y lo añadimos al mapa
+    map.pm.addControls({
+      position: 'bottomleft',
+      drawMarker: true,
+      drawPolyline: false,
+      drawPolygon: false,
+      
+      drawRectangle: false,
+      drawCircle: false,
+      drawCircleMarker: false,
+      drawText: false,
+
+      editMode: false,
+      dragMode:true,
+      cutPolygon:false,
+      removalMode: false,
+      rotateMode: false
+    });
+    map.pm.setGlobalOptions({'snappable':false})
+
+    map.on('pm:create', function (e) {
+      var layer = e.layer;
+      console.log(layer);
+      sidebar.open('agregar');
+      $("#lig_norte").val(layer._latlng.lat);
+      $("#lig_este").val(layer._latlng.lng);
+      layer.on('pm:edit', (e) => {
+        console.log(e.layer);
+        $("#lig_norte").val(e.layer._latlng.lat);
+        $("#lig_este").val(e.layer._latlng.lng);
+        sidebar.open('agregar');
+      });
+    });
+
+
+    notification = L.control.notifications({
+      timeout: 4000,
+      position: 'bottomright',
+      closable: true,
+      dismissable: true,
+      className: 'pastel'
+    }).addTo(map);
+
+
+    /* <----------- Control de Herramienta de Busqueda ----------> */
+
+    // Creamos el control de búsqueda y lo añadimos al mapa
+    searchCtrl = L.control.fuseSearch().addTo(map);
+
+
+    // Añadimos el contenido del control de búsqueda a la barra lateral
+    $("#buscadorContent").append($(".leaflet-fusesearch-panel .content"));
+    // Removemos el botón y contenedor del control de búsqueda del mapa
+    $(searchCtrl._container).remove();
+    // Añadimos un ícono de búsqueda al control de búsqueda
+    $(".content .header").prepend('<i class="fa-solid fa-magnifying-glass-location"></i>');
+    // Removemos el botón de cerrar del control de búsqueda
+    $(".content .header .close").remove();    
+            
+    $('#dataModal').on('show.bs.modal', function (e) {
+      console.log($(e.relatedTarget).data('whatever'));
+      $(".modal-title").html(datos_modal[$(e.relatedTarget).data('whatever')]["title"]);
+      $(".modal-body").html(datos_modal[$(e.relatedTarget).data('whatever')]["html_content"]);
+    })
+
+    $('#files').change(function(evt) {
+      var files = evt.target.files; 
+      for (var i = 0, f; f = files[i]; i++) {
+        if (f.name.slice(-3) === 'zip') {
+            GraficarFileSHP(f);
+        }else if (f.name.slice(-3) === 'kml') {
+            GraficarFileKML(f);
+        }else if (f.name.slice(-3) === 'kmz') {
+            GraficarFileKMZ(f);
+        }else if (f.name.slice(-4) === 'json') {
+            GraficarFileGeoJSON(f);
+        }else{
+            notification.alert('Atención', 'Tipo de archivo incorrecto');
+        }
+      }
+    });
+    // Función que asigna el nombre del archivo al texto del input
+    $("#files").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+    
+    $("#logout").click(function (e) {
+      firebase.auth().signOut();
+      location.reload();
+    });
     
   });
 
@@ -509,8 +514,6 @@ map.zoomControl.setPosition('bottomleft');
       reader.readAsArrayBuffer(f);
   }
 
-
-
 })();
 
 
@@ -573,7 +576,6 @@ function GuardarLIG() {
     'type' : 'lig_tipologia',
     'user' : 'lig_respon',
   }
-  console.log('sdfsds');
   var stat = true;
   for (const key in ids) {
     if (Object.hasOwnProperty.call(ids, key)) {
@@ -596,11 +598,163 @@ function GuardarLIG() {
     }
     console.log(object);
     database.ref('lig/'+arraySize).set(object).then((snap) => {
+      notification.success('¡Listo!', 'Se guardó con exito el LIG');
+      sidebar.close();
+    }).catch((error) => {
+      notification.alert('¡Error!', 'Ocurrió un error al intentar guardar el LIG');
+      console.log(error);
+    });
+  }
+
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+      database.ref().child("users/"+user.uid).get().then((snapshot) => {
+          if (snapshot.exists()) {
+              if (snapshot.val().level > 1) {
+                  $("#resgistro_Evento").toggleClass("d-none");  
+                  $("#registrarEvento").toggleClass("d-none");
+                  $("#registropane").append(
+                      `<br>
+                      <div class="form-group">
+                        <label>ID:</label><br>
+                        <input disabled type="text" class="form-control" id="lig_id_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Nombre:</label><br>
+                        <input type="text" class="form-control" id="lig_name_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Código:</label><br>
+                        <input type="text" class="form-control" id="lig_code_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Región:</label><br>
+                        <input type="text" class="form-control" id="lig_region_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Fecha de ingreso:</label><br>
+                        <input type="date" class="form-control" id="lig_fecha_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Latitud (Norte):</label><br>
+                        <input type="number" step=0.000000000000001 class="form-control" id="lig_norte_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Longitud (Este):</label><br>
+                        <input type="number" step=0.000000000000001 class="form-control" id="lig_este_edit">
+                      </div>
+                      <div class="form-group">
+                        <label>Tipología:</label><br>
+                        <select class="form-control" id="lig_tipologia_edit">
+                          <option value="01">Científico</option>
+                          <option value="02">Turístico</option>
+                          <option value="03">Educativo</option>
+                          <option value="04">Mixto</option>
+                        </select>
+                      </div>
+                      <div class="form-group" id="lig_descripcion_edit">
+                        <label>Descripción</label><br>
+                        <textarea class="form-control" rows="3" id="lig_obs_edit"></textarea/>
+                      </div>
+                      <div class="form-group">
+                        <label>Responsable:</label><br>
+                        <input type="text" class="form-control" id="lig_respon_edit">
+                      </div>
+                      <br>
+                      <div class="form-group">
+                        <button type="button" class="btn btn-comun" onClick="EditarLIG()"> Editar LIG</button>
+                        <button type="button" class="btn btn-comun" onClick="BorrarLIG()"> Borrar LIG</button>
+                      </div>`
+                  );
+                  markers.on('click', function(e) {
+                      editPoint(e);
+                  }); 
+              }
+          } else {
+              console.log("No data available");
+          }
+      }).catch((error) => {
+          console.log(error);
+      });
+      
+  } else {
+      
+      console.log("no hay usuario");      
+  }
+
+});
+
+function editPoint(e) {
+  const ids = {
+    'id' : 'lig_id_edit',
+    'Codigo' : 'lig_code_edit',
+    'Fecha' : 'lig_fecha_edit',
+    'Descripcion' : 'lig_obs_edit',
+    'Norte' : 'lig_norte_edit',
+    'Este' : 'lig_este_edit',
+    'Nombre' : 'lig_name_edit',
+    'Region' : 'lig_region_edit',
+    'Tipologia' : 'lig_tipologia_edit',
+    'Responsable' : 'lig_respon_edit',
+  }
+  for (const key in ids) {
+    if (Object.hasOwnProperty.call(ids, key)) {
+      const element = ids[key];
+      $("#"+element).val(e.layer.feature.properties[key]);
+    }
+  }
+  console.log(e);
+  sidebar.open('registrarEvento');
+}
+
+function EditarLIG() {
+  const ids = {
+    'code' : 'lig_code_edit',
+    'date' : 'lig_fecha_edit',
+    'info' : 'lig_obs_edit',
+    'lat' : 'lig_norte_edit',
+    'lng' : 'lig_este_edit',
+    'name' : 'lig_name_edit',
+    'region' : 'lig_region_edit',
+    'type' : 'lig_tipologia_edit',
+    'user' : 'lig_respon_edit',
+  }
+  const id = $("#lig_id_edit").val();
+  var stat = true;
+
+  if (stat){
+    var object = {"active": true}
+    for (const key in ids) {
+      if (Object.hasOwnProperty.call(ids, key)) {
+        const element = ids[key];
+        object[key] = $("#"+element).val()
+      }
+    }
+    console.log(object);
+    database.ref('lig/'+id).set(object).then((snap) => {
       notification.success('¡Listo!', 'Se guardó con exito el evento');
       sidebar.close();
     }).catch((error) => {
       notification.alert('¡Error!', 'Ocurrió un error al intentar guardar el evento');
       console.log(error);
+    });
+  }
+
+}
+
+function BorrarLIG() {
+  const id = $("#lig_id_edit").val();
+  var stat = true;
+  if (stat){
+    database.ref('lig/'+id+'/'+'active').set(
+      false
+    ).then((snapshot) => {
+      notification.success('¡Listo!', 'Se desactivó con exito el LIG');
+    }).catch((error) => {
+      console.error(error);
+      notification.alert('¡Error!', 'Ocurrió un error al intentar desacrtivar el LIG');
     });
   }
 

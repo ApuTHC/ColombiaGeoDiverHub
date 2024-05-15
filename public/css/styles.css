@@ -371,6 +371,17 @@ display: table;
   border-color: #333;
 }
 
+#modal-perfil-container{
+  margin-top: 20px;
+  text-align: center;
+}
+#modal-perfil-container img {
+    width: 30%;
+    height: 30%;
+    border-radius: 50%;
+    border: 5px solid #333;
+    margin-bottom: 20px;
+}
 
 
 @media (min-width: 577px) {
