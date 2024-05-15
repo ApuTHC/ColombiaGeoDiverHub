@@ -59,7 +59,7 @@ var datos = {
             "html_content": `<p>La Geodiversidad es el elemento fisico que soporta la biodiversidad.</p>
 
 
-            <center><iframe width="900" height="500" src="https://www.youtube.com/embed/4gL3XxN8Oew?si=XLYxoQLSnn6-4sC9"
+            <center><iframe width="100%" height="500px" src="https://www.youtube.com/embed/4gL3XxN8Oew?si=XLYxoQLSnn6-4sC9"
                 title="YouTube video player" frameborder="0" allow="accelerometer; 
                autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
                web-share" allowfullscreen></iframe></center>
